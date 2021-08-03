@@ -34,6 +34,15 @@ namespace ivrt
     shape *Shp;
     vec3 Color;
     vec3 N;
+    BOOL IsPos;
+    BOOL IsNorm;
+    vec3 P;
+
+    /* Intr class constructor */
+    intr( VOID ) : IsNorm(FALSE), IsPos(FALSE)
+    {
+    }
+
   }; /* End of 'intr' class */
 
   /* Shape class */
@@ -52,6 +61,26 @@ namespace ivrt
     {
       return TRUE;
     } /* End of 'Intersection' function */
+    /* Check if ray intersects object function.
+     * ARGUMENTS: 
+     *   - input ray:
+     *      const ray &R;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    virtual BOOL IsIntersected( const ray &R )
+    {
+      return TRUE;
+    } /* End of 'IsIntersected' function */
+
+    /* Get normal function.
+     * ARGUMENTS: 
+     *   - intersection point on ray:
+     *      intr *Intr;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    virtual VOID GetNormal( intr *Intr )
+    {
+    }
   }; /* End of 'shape' class */
 
   /* Scene class */

@@ -81,6 +81,9 @@
     <ClInclude Include="src\rt\rt_def.h">
       <Filter>Source Files\Ray Tracing</Filter>
     </ClInclude>
+    <ClInclude Include="src\rt\shapes\triangle.h">
+      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

@@ -169,19 +169,24 @@ namespace ivrt
      */
     BOOL SaveTGA( VOID )
     {
-      CHAR Buf[20] = TGA_EXT_SIGNATURE;
+      std::string Addon = "CGSG_FOREVER";
 
       std::string FileName; 
       SYSTEMTIME st;
       GetLocalTime(&st);
-      FileName = "bin/shots/image_" +
-        std::to_string(st.wYear) + std::to_string(st.wMonth) + 
-        std::to_string(st.wDay) + std::to_string(st.wHour) + 
-        std::to_string(st.wMinute) + std::to_string(st.wSecond) + ".tga"; 
+      FileName = "bin/shots/ID3_RES_RT_" +
+        std::to_string(st.wYear) + "_" +
+        std::to_string(st.wMonth) + "_" +
+        std::to_string(st.wDay) + "_" +
+        std::to_string(st.wHour) + "_" +
+        std::to_string(st.wMinute) + "_" +
+        std::to_string(st.wSecond) + "_" +
+        std::to_string(st.wMilliseconds) + ".tga";
 
       std::fstream f(FileName, std::fstream::out /*| std::fstream::binary*/);
       tgaFILEHEADER fh;
       tgaFILEFOOTER ff;
+      tgaEXTHEADER eh;
       fh.IDLength = 0;
       fh.ColorMapType = 0;
       fh.ImageType = 2;
@@ -189,21 +194,30 @@ namespace ivrt
       fh.Y = 0;
       fh.Width = Width;
       fh.Height = Height;
-      fh.BitsPerPixel = 32;
-      fh.ImageDescr = 8;
+      fh.BitsPerPixel = 24;
+      fh.ImageDescr = 32;
       
       ff.DeveloperOffset = 0;
       ff.ExtensionOffset = 0;
       
       strcpy(ff.Signature, TGA_EXT_SIGNATURE);
+      strcpy(eh.AuthorName, "Ivan Dmitriev");
+      strcpy(eh.AuthorComment, "Ray Tracing project");
+
+      eh.VersionLetter = 'A';
+      eh.VersionNumber = 2;
+      strcpy(eh.SoftwareID, "Cgsg foreve");
 
       if (!f.is_open())
         return FALSE;
 
       f.write((CHAR *)&fh, sizeof(tgaFILEHEADER));
+      //f.write((CHAR *)&Addon, sizeof(Addon));
       for (INT y = 0; y < Height; y++)
         for (INT x = 0; x < Width; x++)
-          f.write((CHAR *)&Pixels[y * Width + x], sizeof(DWORD));
+          f.write((CHAR *)&Pixels[y * Width + x], 3);
+      //f.write((CHAR *)&eh, sizeof(tgaEXTHEADER));
+
       f.write((CHAR *)&ff, sizeof(tgaFILEFOOTER));
      return TRUE;
     } /* End of 'SaveTGA' function */

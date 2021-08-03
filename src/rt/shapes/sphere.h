@@ -55,15 +55,32 @@ namespace ivrt
         Intr->Shp = this;
         Intr->T = OK + sqrt(h2);
         Intr->N = (R(Intr->T) - Center).Normalizing();
+        Intr->P = R(Intr->T);
+        Intr->IsPos = TRUE;
+
         return TRUE;
       }
       if (OK < Threshold || h2 < Threshold)
         return FALSE;
       Intr->T = OK - sqrt(h2);
+      Intr->P = R(Intr->T);
+      Intr->IsPos = TRUE;
+
       Intr->Shp = this;
-      Intr->N = (R(Intr->T) - Center).Normalizing();
+      //Intr->N = (R(Intr->T) - Center).Normalizing();
       return TRUE;
     } /* End of 'SphereInter' function */
+ 
+    /* Get normal function.
+     * ARGUMENTS: 
+     *   - intersection point on ray:
+     *      intr *Intr;
+     * RETURNS: NONE.
+     */
+    VOID GetNormal( intr *Intr ) override
+    {
+      Intr->N = (Intr->P - Center).Normalizing();
+    } /* End of 'GetNormal' function */
 
   };
 } /* end of 'ivrt' namespace */

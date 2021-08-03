@@ -56,21 +56,27 @@ namespace ivrt
           //DBL nl = inters;
           ray R = Cam.FrameRay(x + 0.5, y + 0.5);
           //Frame.PutPixel(x, y, frame::ToRGB(R.Dir[0] / 2 + 0.5, R.Dir[1] / 2 + 0.5, R.Dir[2] / 2 + 0.5));
+          if (Scene.Intersection(R, &I))
+          {
+            if (!I.IsNorm)
+              I.Shp->GetNormal(&I);
+            
+            DBL nl = I.N & L;
+            if (nl < 0.1)
+              nl = 0.1;
+            color = vec3(0.30, 0.8, 0.47) * nl;
+
+            if (Scene.Intersection(ray(R(I.T) + L * 0.001, L), &I))
+              color = color * 0.3;
+            Frame.PutPixel(x, y, frame::ToRGB(color[0], color[1], color[2]));
+          }
+          //Frame.PutPixel(x, y, frame::ToRGB(mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10)));
           //if (Scene.Intersection(R, &I))
           //{
-          //  DBL nl = I.N & L;
-          //  if (nl < 0.1)
-          //    nl = 0.1;
-          //  color = vec3(0.30, 0.8, 0.47) * nl;
-
-          //  if (Scene.Intersection(ray(R(I.T) + L * Threshold, L), &I))
-          //    color = color * 0.3;
-          //  Frame.PutPixel(x, y, frame::ToRGB(color[0], color[1], color[2]));
+          //  if (!I.IsNorm)
+          //    I.Shp->GetNormal(&I);
+          //  Frame.PutPixel(x, y, frame::ToRGB(I.N[0], I.N[1], I.N[2]));
           //}
-          //Frame.PutPixel(x, y, frame::ToRGB(mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10)));
-          if (Scene.Intersection(R, &I))
-            Frame.PutPixel(x, y, frame::ToRGB(I.N[0], I.N[1], I.N[2]));
-
         }
       InvalidateRect(hWnd, nullptr, TRUE);
     } /* End of 'Render' function */
@@ -94,8 +100,8 @@ namespace ivrt
     VOID Paint( HDC hDC ) override
     {
       //SelectObject(hDC, GetStockObject(NULL_BRUSH));
-      Frame.Draw(hDC, 0, 0, 1);
-      //Frame.Draw(hDC, (win::W - Cam.FrameW) / 2 , (win::H - Cam.FrameH) / 2 , 1);
+      //Frame.Draw(hDC, 0, 0, 1);
+      Frame.Draw(hDC, (win::W - Cam.FrameW) / 2 , (win::H - Cam.FrameH) / 2 , 1);
       //Rectangle(hDC, (W - Frame.Width) / 2 - 1, (H - Frame.Height) / 2 - 1, (W + Frame.Width) / 2 + 1, (H - Frame.Height) / 2 + 1);
     } /* End of 'Paint' function */
 
@@ -179,11 +185,12 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
 
   //ivrt::vec3 p(120, 13, 4);
   //FLT x = p.Distance(p);
-  MyNew.Scene << /*new ivrt::sphere(ivrt::vec3(0, 1, 0), 1) <<
+  MyNew.Scene << new ivrt::sphere(ivrt::vec3(0, 1, 0), 1) <<
                  new ivrt::sphere(ivrt::vec3(0, 1, 3), 1) << 
-                 new ivrt::sphere(ivrt::vec3(3, 1, 4), 1) <<*/ 
+                 new ivrt::sphere(ivrt::vec3(3, 1, 4), 1) << 
                  new ivrt::plane(ivrt::vec3(0, 1, 0), 0) << 
-                 new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5));
+                 new ivrt::triangle(ivrt::vec3(0, 2, 0), ivrt::vec3(1, 2, 0), ivrt::vec3(0, 2, 1));
+                 /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5))*/;
 
   //MyNew.Scene << new ivrt::plane(ivrt::vec3(0, 0, 0), 0);
   //std::cout << p; 

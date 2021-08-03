@@ -47,13 +47,25 @@ namespace ivrt
       if (fabs(nd) < Threshold)
         return FALSE;
       vec3 v = R.Org;
-      Intr->T = -(Norm & v + D) / (Norm & R.Dir); 
-      Intr->N = Norm;
+      Intr->T = -(Norm & v + D) / (Norm & R.Dir);
+      //Intr->N = Norm;
       if (Intr->T < 0)
         return FALSE;
+      Intr->P = R(Intr->T);
+
       Intr->Shp = this;
       return TRUE;
     } /* End of 'Intersection' function */
+    /* Get normal function.
+     * ARGUMENTS: 
+     *   - intersection point on ray:
+     *      intr *Intr;
+     * RETURNS: NONE.
+     */
+    VOID GetNormal( intr *Intr ) override
+    {
+      Intr->N = Norm;
+    } /* End of 'GetNormal' function */
 
   };
 } /* end of 'ivrt' namespace */

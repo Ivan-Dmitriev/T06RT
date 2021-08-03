@@ -34,6 +34,7 @@
     <ClInclude Include="src\rt\shapes\box.h" />
     <ClInclude Include="src\rt\shapes\plane.h" />
     <ClInclude Include="src\rt\shapes\sphere.h" />
+    <ClInclude Include="src\rt\shapes\triangle.h" />
     <ClInclude Include="src\win\win.h" />
   </ItemGroup>
   <ItemGroup>

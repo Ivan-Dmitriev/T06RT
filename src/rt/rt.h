@@ -23,6 +23,7 @@
 #include "shapes/sphere.h"
 #include "shapes/plane.h"
 #include "shapes/box.h"
+#include "shapes/triangle.h"
 
 #endif /* __rt_h_ */
 
