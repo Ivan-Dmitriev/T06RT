@@ -29,6 +29,9 @@
     <ClInclude Include="src\mth\mth_vec3.h" />
     <ClInclude Include="src\mth\mth_vec4.h" />
     <ClInclude Include="src\rt\frame\frame.h" />
+    <ClInclude Include="src\rt\lights\direction.h" />
+    <ClInclude Include="src\rt\lights\point.h" />
+    <ClInclude Include="src\rt\lights\spot.h" />
     <ClInclude Include="src\rt\rt.h" />
     <ClInclude Include="src\rt\rt_def.h" />
     <ClInclude Include="src\rt\shapes\box.h" />
@@ -39,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\rt\lights\light.cpp" />
     <ClCompile Include="src\rt\rt.cpp" />
     <ClCompile Include="src\win\win.cpp" />
     <ClCompile Include="src\win\winmsg.cpp" />

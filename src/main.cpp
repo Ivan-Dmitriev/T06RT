@@ -17,6 +17,7 @@
 
 #include <cmath>
 #include <ctime>
+#include <thread>
 
 #include "def.h"
 #include "win/win.h"
@@ -34,6 +35,9 @@ namespace ivrt
     scene Scene; 
     camera Cam;
     frame Frame;  // Window frame
+  private:
+    std::thread Th[11];
+  public:
     raytracer( VOID )
     {
     }
@@ -46,38 +50,51 @@ namespace ivrt
     */
     VOID Render( VOID )
     {
-      intr I;
-      vec3 L = vec3(1, 1, 1).Normalizing();
-      vec3 color;
+      auto ThreadFunc = []( raytracer *RT, INT i )
+      {
+        intr I;
+        vec3 L = vec3(1, 1, 1).Normalizing();
+        vec3 color;
 
-      for (INT y = 0; y < H; y++)
-        for (INT x = 0; x < W; x++)
-        {
-          //DBL nl = inters;
-          ray R = Cam.FrameRay(x + 0.5, y + 0.5);
-          //Frame.PutPixel(x, y, frame::ToRGB(R.Dir[0] / 2 + 0.5, R.Dir[1] / 2 + 0.5, R.Dir[2] / 2 + 0.5));
-          if (Scene.Intersection(R, &I))
+        for (INT y = i * (RT->Frame.Height / 11); y < i * (RT->Frame.Height + 1); y++)
+          for (INT x = 0; x < RT->Frame.Width; x++)
           {
-            if (!I.IsNorm)
-              I.Shp->GetNormal(&I);
+            //DBL nl = inters;
+            ray R = RT->Cam.FrameRay(x + 0.5, y + 0.5);
+            //Frame.PutPixel(x, y, frame::ToRGB(R.Dir[0] / 2 + 0.5, R.Dir[1] / 2 + 0.5, R.Dir[2] / 2 + 0.5));
+            if (RT->Scene.Intersection(R, &I))
+            {
+              if (!I.IsNorm)
+                I.Shp->GetNormal(&I);
             
-            DBL nl = I.N & L;
-            if (nl < 0.1)
-              nl = 0.1;
-            color = vec3(0.30, 0.8, 0.47) * nl;
+              /*
+              DBL nl = I.N & L;
+              if (nl < 0.1)
+                nl = 0.1;
+              */
 
-            if (Scene.Intersection(ray(R(I.T) + L * 0.001, L), &I))
-              color = color * 0.3;
-            Frame.PutPixel(x, y, frame::ToRGB(color[0], color[1], color[2]));
+              //color = vec3(0.30, 0.8, 0.47) * nl;
+              color = vec3(0.30, 0.8, 0.47) * (I.N & L);
+
+              if (RT->Scene.Intersection(ray(I.P + L * Threshold, L), &I))
+                color = color * 0.3;
+              RT->Frame.PutPixel(x, y, frame::ToRGB(color[0], color[1], color[2]));
+            }
+            //Frame.PutPixel(x, y, frame::ToRGB(mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10)));
+            //if (Scene.Intersection(R, &I))
+            //{
+            //  if (!I.IsNorm)
+            //    I.Shp->GetNormal(&I);
+            //  Frame.PutPixel(x, y, frame::ToRGB(I.N[0], I.N[1], I.N[2]));
+            //}
           }
-          //Frame.PutPixel(x, y, frame::ToRGB(mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10)));
-          //if (Scene.Intersection(R, &I))
-          //{
-          //  if (!I.IsNorm)
-          //    I.Shp->GetNormal(&I);
-          //  Frame.PutPixel(x, y, frame::ToRGB(I.N[0], I.N[1], I.N[2]));
-          //}
-        }
+      };
+      for (INT i = 0; i < 11; i++)
+        Th[i] = std::thread(ThreadFunc, this, i);
+
+      for (INT i = 0; i < 11; i++)
+        Th[i].join();
+
       InvalidateRect(hWnd, nullptr, TRUE);
     } /* End of 'Render' function */
 
@@ -188,9 +205,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
   MyNew.Scene << new ivrt::sphere(ivrt::vec3(0, 1, 0), 1) <<
                  new ivrt::sphere(ivrt::vec3(0, 1, 3), 1) << 
                  new ivrt::sphere(ivrt::vec3(3, 1, 4), 1) << 
-                 new ivrt::plane(ivrt::vec3(0, 1, 0), 0) << 
-                 new ivrt::triangle(ivrt::vec3(0, 2, 0), ivrt::vec3(1, 2, 0), ivrt::vec3(0, 2, 1));
-                 /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5))*/;
+                 new ivrt::plane(ivrt::vec3(0, 1, 0), 0); 
+                 /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5)); */
 
   //MyNew.Scene << new ivrt::plane(ivrt::vec3(0, 0, 0), 0);
   //std::cout << p; 

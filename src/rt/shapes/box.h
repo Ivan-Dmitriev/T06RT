@@ -100,14 +100,75 @@ namespace ivrt
       */
     BOOL Intersection( const ray &Ray, intr *Intr ) override
     {
-      const static vec3 Normals[6] =
+      static vec3 Normals[6] =
       {
         vec3(1, 0, 0), vec3(-1,  0,  0),
         vec3(0, 1, 0), vec3( 0, -1,  0),
         vec3(0, 0, 1), vec3( 0,  0, -1),
       };
 
-      INT Ind = 1, ind = 0;
+      INT Ind = 1, tind = 0;
+      DBL tnear = -HUGE_VAL, tfar = HUGE_VAL, t0, t1, tmp;
+
+      // X axis
+      if (fabs(Ray.Dir[0]) < Threshold)
+        if (Min[0] > Ray.Org[0] || Ray.Org[0] > Max[0])
+          return FALSE;
+      
+      tnear = (Min[0] - Ray.Org[0]) / Ray.Dir[0];
+      tfar = (Max[0] - Ray.Org[0]) / Ray.Dir[0];
+      
+      if (tnear > tfar)
+        COM_SWAP(tnear, tfar, tmp), Ind = 0;
+
+      // Y axis
+      if (fabs(Ray.Dir[1]) < Threshold)
+        if (Min[1] > Ray.Org[1] || Ray.Org[1] > Max[1])
+          return FALSE;
+
+      t0 = (Min[1] - Ray.Org[1]) / Ray.Dir[1];
+      t1 = (Max[1] - Ray.Org[1]) / Ray.Dir[1];
+      tind = 3;
+      if (t0 > t1)
+        COM_SWAP(t0, t1, tmp), tind = 2;
+      if (t0 > tnear)
+        tnear = t0, Ind = tind;
+      if (t1 < tfar)
+        tfar = t1;
+      if (tnear > tfar || tfar < 0)
+        return FALSE;
+
+      // Z axis
+      if (fabs(Ray.Dir[2]) < Threshold)
+        if (Min[2] > Ray.Org[2] || Ray.Org[2] > Max[2])
+          return FALSE;
+      
+      t0 = (Min[2] - Ray.Org[2]) / Ray.Dir[2];
+      t1 = (Max[2] - Ray.Org[2]) / Ray.Dir[2];
+      tind = 5;
+      if (t0 > t1)
+        COM_SWAP(t0, t1, tmp), tind = 4;
+      if (t0 > tnear)
+        tnear = t0, Ind = tind;
+      if (t1 < tfar)
+        tfar = t1;
+      if (tnear > tfar || tfar < 0)
+        return FALSE;
+
+      Intr->N = Normals[Ind];
+      Intr->Shp = this;
+      Intr->T = tnear;
+      return TRUE;
+    } // End of 'Intersection' function
+    /* Check if ray intersects object function.
+     * ARGUMENTS: 
+     *   - input ray:
+     *      const ray &R;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    BOOL IsIntersected( const ray &Ray ) override
+    {
+      INT Ind = 1, tind = 0;
       DBL tnear = -HUGE_VAL, tfar = HUGE_VAL, t0, t1, tmp;
 
       // X axis
@@ -128,11 +189,11 @@ namespace ivrt
       
       t0 = (Min[1] - Ray.Org[1]) / Ray.Dir[1];
       t1 = (Max[1] - Ray.Org[1]) / Ray.Dir[1];
-      ind = 3;
+      tind = 3;
       if (t0 > t1)
-        COM_SWAP(t0, t1, tmp), ind = 2;
+        COM_SWAP(t0, t1, tmp), tind = 2;
       if (t0 > tnear)
-        tnear = t0, Ind = ind;
+        tnear = t0, Ind = tind;
       if (t1 < tfar)
         tfar = t1;
       if (tnear > tfar || tfar < 0)
@@ -145,21 +206,19 @@ namespace ivrt
       
       t0 = (Min[2] - Ray.Org[2]) / Ray.Dir[2];
       t1 = (Max[2] - Ray.Org[2]) / Ray.Dir[2];
-      ind = 5;
+      tind = 5;
       if (t0 > t1)
-        COM_SWAP(t0, t1, tmp), ind = 4;
+        COM_SWAP(t0, t1, tmp), tind = 4;
       if (t0 > tnear)
-        tnear = t0, Ind = ind;
+        tnear = t0, Ind = tind;
       if (t1 < tfar)
         tfar = t1;
       if (tnear > tfar || tfar < 0)
         return FALSE;
 
-      Intr->N = Normals[Ind];
-      Intr->Shp = this;
-      Intr->T = tnear;
       return TRUE;
-    } // End of 'Intersection' function
+    } /* End of 'IsIntersected' function */
+
   };
 } /* end of 'ivrt' namespace */
 

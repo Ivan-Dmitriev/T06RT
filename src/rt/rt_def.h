@@ -37,6 +37,8 @@ namespace ivrt
     BOOL IsPos;
     BOOL IsNorm;
     vec3 P;
+    INT I[5];
+    DBL D[5];
 
     /* Intr class constructor */
     intr( VOID ) : IsNorm(FALSE), IsPos(FALSE)
@@ -88,6 +90,9 @@ namespace ivrt
   {
   private:
     std::vector<shape *> Shapes;
+    vec3 AmbientColor, Background;
+    INT RecLevel, MaxRecLevel;
+ 
   public:
     /* Scene destructor */
     ~scene( VOID )
@@ -121,6 +126,20 @@ namespace ivrt
 
       return *this;
     } /* End of 'operator<<' function */
+    
+    /*
+    vec3 Trace( const ray &R, const evni &Media, DBL Weight )
+    {
+      color = Background;
+      if (RecLevel < MaxRecLevel)
+      {
+        RecLevel++;
+        color = Shade(R.Dir, Media, &intersection, Weight);
+        //color *= exp(-intersection.T * Media.DecayCoef);
+        RecLevel--;
+      }
+    }
+    */
   }; /* End of 'scene' class */
 } /* end of 'ivrt' namespace */
 

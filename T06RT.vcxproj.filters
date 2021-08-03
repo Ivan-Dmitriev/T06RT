@@ -19,17 +19,20 @@
     <Filter Include="Source Files\Source\Math module">
       <UniqueIdentifier>{fae7ebb8-74d2-489d-90e9-eed100cb3e37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Ray Tracing">
-      <UniqueIdentifier>{b2f71b30-2709-402e-b10f-3067e4c7f419}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Source\Windows Depended">
       <UniqueIdentifier>{a8027d56-3cff-4baf-a677-15c904d9a80c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Ray Tracing\Frame Buffer">
+    <Filter Include="Source Files\Source\Ray Tracing">
+      <UniqueIdentifier>{b2f71b30-2709-402e-b10f-3067e4c7f419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source\Frame Buffer">
       <UniqueIdentifier>{ca31bf14-9ba4-4f52-8a6e-4029ad10dcb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Ray Tracing\Shapes Collection">
+    <Filter Include="Source Files\Source\Ray Tracing\Shapes Collection">
       <UniqueIdentifier>{600e5249-8fc9-46fe-ba97-30e62a38c4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source\Ray Tracing\Light system">
+      <UniqueIdentifier>{de809d88-d87d-4720-a0ae-bd34829f1254}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,25 +67,34 @@
       <Filter>Source Files\Source\Windows Depended</Filter>
     </ClInclude>
     <ClInclude Include="src\rt\frame\frame.h">
-      <Filter>Source Files\Ray Tracing\Frame Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rt\rt.h">
-      <Filter>Source Files\Ray Tracing</Filter>
+      <Filter>Source Files\Source\Frame Buffer</Filter>
     </ClInclude>
     <ClInclude Include="src\rt\shapes\sphere.h">
-      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+      <Filter>Source Files\Source\Ray Tracing\Shapes Collection</Filter>
     </ClInclude>
     <ClInclude Include="src\rt\shapes\plane.h">
-      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+      <Filter>Source Files\Source\Ray Tracing\Shapes Collection</Filter>
     </ClInclude>
     <ClInclude Include="src\rt\shapes\box.h">
-      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rt\rt_def.h">
-      <Filter>Source Files\Ray Tracing</Filter>
+      <Filter>Source Files\Source\Ray Tracing\Shapes Collection</Filter>
     </ClInclude>
     <ClInclude Include="src\rt\shapes\triangle.h">
-      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+      <Filter>Source Files\Source\Ray Tracing\Shapes Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\rt_def.h">
+      <Filter>Source Files\Source\Ray Tracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\rt.h">
+      <Filter>Source Files\Source\Ray Tracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\lights\direction.h">
+      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\lights\point.h">
+      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\lights\spot.h">
+      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +108,10 @@
       <Filter>Source Files\Source\Windows Depended</Filter>
     </ClCompile>
     <ClCompile Include="src\rt\rt.cpp">
-      <Filter>Source Files\Ray Tracing</Filter>
+      <Filter>Source Files\Source\Ray Tracing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rt\lights\light.cpp">
+      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

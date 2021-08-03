@@ -183,7 +183,7 @@ namespace ivrt
         std::to_string(st.wSecond) + "_" +
         std::to_string(st.wMilliseconds) + ".tga";
 
-      std::fstream f(FileName, std::fstream::out /*| std::fstream::binary*/);
+      std::fstream f(FileName, std::fstream::out | std::fstream::binary);
       tgaFILEHEADER fh;
       tgaFILEFOOTER ff;
       tgaEXTHEADER eh;
