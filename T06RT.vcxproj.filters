@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Source">
+      <UniqueIdentifier>{a4e18851-c57e-4871-a1b6-bd2b6f4704a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source\Math module">
+      <UniqueIdentifier>{fae7ebb8-74d2-489d-90e9-eed100cb3e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ray Tracing">
+      <UniqueIdentifier>{b2f71b30-2709-402e-b10f-3067e4c7f419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source\Windows Depended">
+      <UniqueIdentifier>{a8027d56-3cff-4baf-a677-15c904d9a80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ray Tracing\Frame Buffer">
+      <UniqueIdentifier>{ca31bf14-9ba4-4f52-8a6e-4029ad10dcb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ray Tracing\Shapes Collection">
+      <UniqueIdentifier>{600e5249-8fc9-46fe-ba97-30e62a38c4ed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\def.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_camera.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_matr.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_ray.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_vec2.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_vec3.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_vec4.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth_def.h">
+      <Filter>Source Files\Source\Math module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\win\win.h">
+      <Filter>Source Files\Source\Windows Depended</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\frame\frame.h">
+      <Filter>Source Files\Ray Tracing\Frame Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\rt.h">
+      <Filter>Source Files\Ray Tracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\shapes\sphere.h">
+      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\shapes\plane.h">
+      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\shapes\box.h">
+      <Filter>Source Files\Ray Tracing\Shapes Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rt\rt_def.h">
+      <Filter>Source Files\Ray Tracing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win\win.cpp">
+      <Filter>Source Files\Source\Windows Depended</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win\winmsg.cpp">
+      <Filter>Source Files\Source\Windows Depended</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rt\rt.cpp">
+      <Filter>Source Files\Ray Tracing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
