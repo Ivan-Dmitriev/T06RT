@@ -96,6 +96,9 @@
     <ClInclude Include="src\rt\lights\spot.h">
       <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
     </ClInclude>
+    <ClInclude Include="src\rt\lights\light.h">
+      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -109,9 +112,6 @@
     </ClCompile>
     <ClCompile Include="src\rt\rt.cpp">
       <Filter>Source Files\Source\Ray Tracing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rt\lights\light.cpp">
-      <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

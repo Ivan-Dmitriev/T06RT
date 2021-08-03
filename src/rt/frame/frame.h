@@ -118,11 +118,12 @@ namespace ivrt
                      (BITMAPINFO *)&bih, DIB_RGB_COLORS, SRCCOPY);
     } /* End of 'Draw' function */
 
-    /* Convert from floats to dword rgb function.
-     * ARGUMENTS: 
-     *   - color components:
+    /* Convert float point 0..1 range color to DWORD function.
+     * ARGUMENTS:
+     *   - color RGB values:
      *       FLT R, G, B;
-     * RETURNS: (DWORD) result value.
+     * RETURNS:
+     *   (DWORD) result packed color.
      */
     static DWORD ToRGB( FLT R, FLT G, FLT B )
     {
@@ -134,20 +135,25 @@ namespace ivrt
       return Color;
     } /* End of 'ToRGB' function */
 
-    /* Convert from floats to dword rgb function.
-     * ARGUMENTS: 
-     *   - color components:
-     *       vec3 Color;
-     * RETURNS: (DWORD) result value.
+    /* Convert float point 0..1 range color to DWORD function.
+     * ARGUMENTS:
+     *   - color RGB values:
+     *       FLT R, G, B;
+     * RETURNS:
+     *   (DWORD) result packed color.
      */
     static DWORD ToRGB( vec3 Color )
     {
-      //return Clamp(R) << 16 | Clamp(G) << 8 | Clamp(B);
-      //return ((COLORREF)(((BYTE)(Clamp(R)) | ((WORD)((BYTE)(Clamp(G)))<<8)) | (((DWORD)(BYTE)(Clamp(B)))<<16)));
-      //return (BYTE)((Clamp(R)) << 16))| (BYTE)(Clamp(G)))<< 8 ))|((BYTE)(Clamp(B)))))
-      //return ((COLORREF)((BYTE)(Clamp(R)) << 16) | Clamp(G) << 8 | Clamp(B)));
-      //DWORD Color = RGB(Clamp(Color[0]), Clamp(Color[1]), Clamp(Color[2]));
-      //return Color;
+      auto clamp =
+        []( FLT Value ) -> BYTE
+        {
+          if (Value < 0)
+            return 0;
+          if (Value > 1)
+            return 255;
+          return Value * 255;
+        };
+      return (clamp(Color[0]) << 16) | (clamp(Color[1]) << 8) | clamp(Color[2]);
     } /* End of 'ToRGB' function */
 
     /* Erase function.

@@ -98,68 +98,120 @@ namespace ivrt
       *      intr *Intr;
       * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
       */
-    BOOL Intersection( const ray &Ray, intr *Intr ) override
+    BOOL Intersection( const ray &R, intr *Intr ) override
     {
-      static vec3 Normals[6] =
+      DBL tnear = 0, tfar = HUGE_VAL;
+      vec3 Normals[6] =
       {
-        vec3(1, 0, 0), vec3(-1,  0,  0),
-        vec3(0, 1, 0), vec3( 0, -1,  0),
-        vec3(0, 0, 1), vec3( 0,  0, -1),
+        vec3(-1, 0, 0),
+        vec3(1, 0, 0),
+        vec3(0, -1, 0),
+        vec3(0, 1, 0),
+        vec3(0, 0, -1),
+        vec3(0, 0, 1),
       };
-
-      INT Ind = 1, tind = 0;
-      DBL tnear = -HUGE_VAL, tfar = HUGE_VAL, t0, t1, tmp;
+      INT NormNum = -1;
 
       // X axis
-      if (fabs(Ray.Dir[0]) < Threshold)
-        if (Min[0] > Ray.Org[0] || Ray.Org[0] > Max[0])
+      if (abs(R.Dir[0]) < Threshold)
+      {
+        if (R.Org[0] < Min[0] || R.Org[0] > Max[0])
           return FALSE;
-      
-      tnear = (Min[0] - Ray.Org[0]) / Ray.Dir[0];
-      tfar = (Max[0] - Ray.Org[0]) / Ray.Dir[0];
-      
-      if (tnear > tfar)
-        COM_SWAP(tnear, tfar, tmp), Ind = 0;
+      }
+      else
+      {
+        DBL t0 = (Min[0] - R.Org[0]) / R.Dir[0];
+        DBL t1 = (Max[0] - R.Org[0]) / R.Dir[0];
+        DBL tmp;
+        INT ind = 0;
+
+        if (t0 > t1)
+        {
+          COM_SWAP(t0, t1, tmp);
+          ind = 1;
+        }
+        if (t0 > tnear)
+        {
+          tnear = t0;
+          NormNum = ind;
+        }
+        if (t1 < tfar)
+          tfar = t1;
+        if (tnear > tfar)
+          return FALSE;
+        if (tfar < 0)
+          return FALSE;
+      }
 
       // Y axis
-      if (fabs(Ray.Dir[1]) < Threshold)
-        if (Min[1] > Ray.Org[1] || Ray.Org[1] > Max[1])
+      if (abs(R.Dir[0]) < Threshold)
+      {
+        if (R.Org[1] < Min[1] || R.Org[1] > Max[1])
           return FALSE;
+      }
+      else
+      {
+        DBL t0 = (Min[1] - R.Org[1]) / R.Dir[1];
+        DBL t1 = (Max[1] - R.Org[1]) / R.Dir[1];
+        DBL tmp;
+        INT ind = 2;
 
-      t0 = (Min[1] - Ray.Org[1]) / Ray.Dir[1];
-      t1 = (Max[1] - Ray.Org[1]) / Ray.Dir[1];
-      tind = 3;
-      if (t0 > t1)
-        COM_SWAP(t0, t1, tmp), tind = 2;
-      if (t0 > tnear)
-        tnear = t0, Ind = tind;
-      if (t1 < tfar)
-        tfar = t1;
-      if (tnear > tfar || tfar < 0)
-        return FALSE;
+        if (t0 > t1)
+        {
+          COM_SWAP(t0, t1, tmp);
+          ind = 3;
+        }
+        if (t0 > tnear)
+        {
+          tnear = t0;
+          NormNum = ind;
+        }
+        if (t1 < tfar)
+          tfar = t1;
+        if (tnear > tfar)
+          return FALSE;
+        if (tfar < 0)
+          return FALSE;
+      }
 
       // Z axis
-      if (fabs(Ray.Dir[2]) < Threshold)
-        if (Min[2] > Ray.Org[2] || Ray.Org[2] > Max[2])
+      if (abs(R.Dir[2]) < Threshold)
+      {
+        if (R.Org[2] < Min[2] || R.Org[2] > Max[2])
           return FALSE;
-      
-      t0 = (Min[2] - Ray.Org[2]) / Ray.Dir[2];
-      t1 = (Max[2] - Ray.Org[2]) / Ray.Dir[2];
-      tind = 5;
-      if (t0 > t1)
-        COM_SWAP(t0, t1, tmp), tind = 4;
-      if (t0 > tnear)
-        tnear = t0, Ind = tind;
-      if (t1 < tfar)
-        tfar = t1;
-      if (tnear > tfar || tfar < 0)
-        return FALSE;
+      }
+      else
+      {
+        DBL t0 = (Min[2] - R.Org[2]) / R.Dir[2];
+        DBL t1 = (Max[2] - R.Org[2]) / R.Dir[2];
+        DBL tmp;
+        INT ind = 4;
 
-      Intr->N = Normals[Ind];
+        if (t0 > t1)
+        {
+          COM_SWAP(t0, t1, tmp);
+          ind = 5;
+        }
+        if (t0 > tnear)
+        {
+          tnear = t0;
+          NormNum = ind;
+        }
+        if (t1 < tfar)
+          tfar = t1;
+        if (tnear > tfar)
+          return FALSE;
+        if (tfar < 0)
+          return FALSE;
+      }
+
       Intr->Shp = this;
       Intr->T = tnear;
+      if (NormNum != -1)
+        Intr->N = Normals[NormNum];
       return TRUE;
-    } // End of 'Intersection' function
+    } /* End of 'Intersection' function */
+
     /* Check if ray intersects object function.
      * ARGUMENTS: 
      *   - input ray:
@@ -218,8 +270,7 @@ namespace ivrt
 
       return TRUE;
     } /* End of 'IsIntersected' function */
-
-  };
+  }; /* End of 'box' class */
 } /* end of 'ivrt' namespace */
 
 #endif /* __box_h_ */

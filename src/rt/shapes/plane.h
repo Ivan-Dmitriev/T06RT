@@ -66,8 +66,7 @@ namespace ivrt
     {
       Intr->N = Norm;
     } /* End of 'GetNormal' function */
-
-  };
+  }; /* End of 'plane' class */
 } /* end of 'ivrt' namespace */
 
 #endif /* __plane_h_ */

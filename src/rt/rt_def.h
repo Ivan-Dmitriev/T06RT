@@ -20,6 +20,8 @@
 
 #include "../def.h"
 
+#include "lights/light.h"
+
 /* Project namespace */
 namespace ivrt
 {
@@ -47,8 +49,17 @@ namespace ivrt
 
   }; /* End of 'intr' class */
 
+  /* Surface class */
+  class surface
+  {
+  public:
+    vec3 Ka, Kd, Ks; // ambient, diffuse, specular
+    DBL Ph;          // Bui Tong Phong coefficient
+    DBL Kr, Kt;      // reflected, transmitted
+  }; /* End of 'surface' class */
+
   /* Shape class */
-  class shape
+  class shape : public surface
   {
   public:
     /* Find intersection function.
@@ -85,13 +96,25 @@ namespace ivrt
     }
   }; /* End of 'shape' class */
 
+  /* Environment class */
+  class envi
+  {
+  public:
+    DBL RefractionCoef;
+    DBL DecayCoef;
+    envi( DBL NRefractionCoef, DBL NDecayCoef ) : DecayCoef(NDecayCoef), RefractionCoef(NRefractionCoef)
+    {
+    }
+  }; /* End of 'envi' class */
+
   /* Scene class */
   class scene
   {
   private:
     std::vector<shape *> Shapes;
-    vec3 AmbientColor, Background;
-    INT RecLevel, MaxRecLevel;
+    std::vector<light *> Lights;
+    vec3 AmbientColor, Background = vec3(1, 0, 0);
+    INT RecLevel = 0, MaxRecLevel = 1;
  
   public:
     /* Scene destructor */
@@ -114,7 +137,17 @@ namespace ivrt
      */
     BOOL Intersection( const ray &R, intr *Intr );
 
-   /* Add unit of scene to stock function.
+    /* Find intersection function.
+     * ARGUMENTS: 
+     *   - ray:
+     *      const ray &R;
+     *   - intersection point on ray:
+     *      intr *Intr;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    BOOL IsIntersected( const ray &R );
+
+   /* Add new shape of scene to stock function.
     * ARGUMENTS: 
     *   - Shape to be add:
     *       shape *NewShape;
@@ -126,21 +159,49 @@ namespace ivrt
 
       return *this;
     } /* End of 'operator<<' function */
-    
-    /*
-    vec3 Trace( const ray &R, const evni &Media, DBL Weight )
-    {
-      color = Background;
-      if (RecLevel < MaxRecLevel)
-      {
-        RecLevel++;
-        color = Shade(R.Dir, Media, &intersection, Weight);
-        //color *= exp(-intersection.T * Media.DecayCoef);
-        RecLevel--;
-      }
-    }
+
+   /* Add new light of scene to stock function.
+    * ARGUMENTS: 
+    *   - Light to be add:
+    *       light *NewShape;
+    * RETURNS: (scene & ) link on result scene.
     */
+    scene & operator<<( light *NewLight )
+    {
+      Lights.push_back(NewLight);
+
+      return *this;
+    } /* End of 'operator<<' function */
+
+    /* Get color of factor function.
+     * ARGUMENTS: 
+     *   - Ray direction:
+     *      const ray &R;
+     *   - currrent environment:
+     *       const envi &Media;
+     *   - intersection point:
+     *       intr *Intersection;
+     *   - weight of lighting:
+     *       DBL Weight;
+     * RETURNS: (vec3 ) result color.
+     */
+    vec3 Shade( vec3 &Dir, const envi &Media, intr *Intersection, DBL Weight );
+    
+   /* Trace ray function.
+    * ARGUMENTS: 
+    *   - input ray:
+    *       const ray &R;
+    *   - currrent environment:
+    *       const envi &Media;
+    *   - weight of lighting:
+    *       DBL Weight;
+    * RETURNS: (vec3 ) result color.
+    */
+    vec3 Trace( ray &R, const envi &Media, DBL Weight, INT RecLevel );
+
   }; /* End of 'scene' class */
+ 
+
 } /* end of 'ivrt' namespace */
 
 #endif /* __rt_def_h_ */

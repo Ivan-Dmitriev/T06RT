@@ -81,8 +81,32 @@ namespace ivrt
     {
       Intr->N = (Intr->P - Center).Normalizing();
     } /* End of 'GetNormal' function */
+    /* Check if ray intersects object function.
+     * ARGUMENTS: 
+     *   - input ray:
+     *      const ray &R;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    BOOL IsIntersected( const ray &R ) override
+    {
+      vec3 a = Center - R.Org;
+      FLT OC2, OK, OK2, R2, h2;
 
-  };
+      OC2 = a & a;
+      OK = a & R.Dir;
+      OK2 = (a & R.Dir) * (a & R.Dir);
+      R2 = Radius * Radius;
+      h2 = R2 - (OC2 - OK2);
+      if (OC2 < R2)
+        return TRUE;
+      if (OK < Threshold || h2 < Threshold)
+        return FALSE;
+
+      //Intr->N = (R(Intr->T) - Center).Normalizing();
+      return TRUE;
+
+    } /* End of 'IsIntersected' function */
+  }; /* End of 'sphere' class */
 } /* end of 'ivrt' namespace */
 
 #endif /* __sphere_h_ */

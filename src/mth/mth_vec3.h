@@ -116,6 +116,16 @@ namespace mth
          return vec3(X - V.X, Y - V.Y, Z - V.Z);
       } /* End of 'operator-' function */
 
+      /* Multiply vector operator of vec3 class.
+       *   Component of multiplication of vectors:
+       *     - const vec3 &V;
+       * RETURNS: (vec3) result vector.
+       */
+      vec3 operator*( const vec3 &V ) const
+      {
+         return vec3(V.X * X, V.Y * Y, V.Z * Z);
+      } /* End of 'operator*' function */
+
       /* Sum vec3 and number function.
        * ARGUMENTS: 
        *   - Summing number: 
