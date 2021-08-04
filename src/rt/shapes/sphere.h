@@ -81,6 +81,7 @@ namespace ivrt
     {
       Intr->N = (Intr->P - Center).Normalizing();
     } /* End of 'GetNormal' function */
+
     /* Check if ray intersects object function.
      * ARGUMENTS: 
      *   - input ray:
@@ -101,10 +102,7 @@ namespace ivrt
         return TRUE;
       if (OK < Threshold || h2 < Threshold)
         return FALSE;
-
-      //Intr->N = (R(Intr->T) - Center).Normalizing();
       return TRUE;
-
     } /* End of 'IsIntersected' function */
   }; /* End of 'sphere' class */
 } /* end of 'ivrt' namespace */

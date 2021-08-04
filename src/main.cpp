@@ -56,7 +56,7 @@ namespace ivrt
         intr I;
         vec3 L = vec3(1, 1, 1).Normalizing();
         vec3 color;
-        envi Media(0.7, 0.7);
+        envi Media(0.7, 0.3);
         for (INT y = i * (RT->Frame.Height / 11); y < (i + 1) * (RT->Frame.Height / 11); y++)
           for (INT x = 0; x < RT->Frame.Width; x++)
           {
@@ -133,7 +133,7 @@ namespace ivrt
     VOID Timer( VOID ) override
     {
       Render();
-      //Cam.Rotate(vec3(0, 1, 0), 1);
+      Cam.Rotate(vec3(0, 1, 0), 1);
     } /* End of 'Timer' function */
     /* Erase function.
      * ARGUMENTS: 
@@ -179,12 +179,14 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
 
   //ivrt::vec3 p(120, 13, 4);
   //FLT x = p.Distance(p);
-  MyNew.Scene << new ivrt::sphere(ivrt::vec3(0, 1, 0), 1) <<
+  MyNew.Scene << new ivrt::sphere(ivrt::vec3(-1, 1, -1), 1) <<
                  new ivrt::sphere(ivrt::vec3(0, 1, 3), 1) << 
                  new ivrt::sphere(ivrt::vec3(3, 1, 4), 1) << 
                  new ivrt::plane(ivrt::vec3(0, 1, 0), 0) << 
-                 new ivrt::point(ivrt::vec3(4, 3, 4), ivrt::vec3(0, 0, 0.9), 10, 20) <<  
-                 new ivrt::point(ivrt::vec3(1, 6, 1), ivrt::vec3(0.9, 0, 0), 10, 20); 
+                 new ivrt::point(ivrt::vec3(4, 10, -4), ivrt::vec3(1, 1, 1), 10, 20) <<
+                 new ivrt::point(ivrt::vec3(-4, 10, -4), ivrt::vec3(1, 1, 1), 10, 20) <<
+                 new ivrt::point(ivrt::vec3(4, 10, -4), ivrt::vec3(1, 1, 1), 10, 20) <<
+                 new ivrt::box(ivrt::vec3(0, 0, 0), ivrt::vec3(2, 2, 2)); 
 
   /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5)); */
 

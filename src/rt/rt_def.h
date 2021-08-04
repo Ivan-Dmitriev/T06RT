@@ -25,6 +25,9 @@
 /* Project namespace */
 namespace ivrt
 {
+  const DBL FogStart = 0.75;
+  const DBL FogEnd = 2;
+
   const static DBL Threshold = 0.0001;
   class shape;
 
@@ -56,7 +59,7 @@ namespace ivrt
     vec3 Ka, Kd, Ks; // ambient, diffuse, specular
     DBL Ph;          // Bui Tong Phong coefficient
     DBL Kr, Kt;      // reflected, transmitted
-    surface( VOID ) : Ka(vec3(0.1)), Kd(vec3(0.7)), Ks(vec3(0.7)), Kr(0.9), Kt(0.1), Ph(10)  
+    surface( VOID ) : Ka(vec3(0.23125)), Kd(vec3(0.2775)), Ks(vec3(0.773911)), Kr(0.4), Kt(0.1), Ph(89.6)  
     {
     }
     surface( vec3 NKa, vec3 NKd, vec3 NKs, DBL NPh, DBL NKr, DBL NKt ) :
@@ -125,8 +128,8 @@ namespace ivrt
   private:
     std::vector<shape *> Shapes;
     std::vector<light *> Lights;
-    vec3 AmbientColor, Background = vec3(0.9, 0.9, 0.9);
-    INT RecLevel = 0, MaxRecLevel = 1;
+    vec3 AmbientColor, Background = vec3(0.1);
+    INT RecLevel = 0, MaxRecLevel = 3;
  
   public:
     /* Scene destructor */

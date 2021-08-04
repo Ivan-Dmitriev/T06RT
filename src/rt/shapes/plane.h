@@ -47,7 +47,7 @@ namespace ivrt
       if (fabs(nd) < Threshold)
         return FALSE;
       vec3 v = R.Org;
-      Intr->T = -(Norm & v + D) / (Norm & R.Dir);
+      Intr->T = -(Norm & v + D) / nd;
       //Intr->N = Norm;
       if (Intr->T < 0)
         return FALSE;
@@ -66,6 +66,25 @@ namespace ivrt
     {
       Intr->N = Norm;
     } /* End of 'GetNormal' function */
+    /* Check if ray intersects object function.
+     * ARGUMENTS: 
+     *   - input ray:
+     *      const ray &R;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    BOOL IsIntersected( const ray &R ) override
+    {
+      DBL nd = Norm & R.Dir, res = 0;
+
+      if (fabs(nd) < Threshold)
+        return FALSE;
+      vec3 v = R.Org;
+      res = -(Norm & v + D) / nd;
+      if (res < 0)
+        return FALSE;
+      return TRUE;
+    } /* End of 'IsIntersected' function */
+
   }; /* End of 'plane' class */
 } /* end of 'ivrt' namespace */
 
