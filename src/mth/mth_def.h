@@ -54,6 +54,7 @@ namespace mth
     {
       return Value < min ? min : Value > max ? max : Value;
     } /* End of 'Clamp' function */
+
   template<class Type>
    /* Get one random number between -1 and 1 function.
     * ARGUMENTS: None; 

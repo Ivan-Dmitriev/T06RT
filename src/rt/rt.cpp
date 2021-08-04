@@ -77,12 +77,17 @@ BOOL ivrt::scene::IsIntersected( const ray &R )
  */
 ivrt::vec3 ivrt::scene::Shade( vec3 &Dir, const envi &Media, intr *Inter, DBL Weight )
 {
-  vec3 Diffuse, Specular, Ambient = vec3(0.1), Color(0);
-  DBL att;
-  vec3 Result;
+  DBL vn = Inter->N & Dir;
+  if (vn > 0)
+    vn = -vn, Inter->N = -Inter->N;
 
+  vec3 Diffuse = vec3(0), Specular = vec3(0), Ambient = vec3(0.1), Color(0);
+  //vec3 R = Dir - Inter->N * (2 * (Dir & Inter->N));
+  vec3 R = Inter->N.Reflect(Dir);
   for (auto OneLight : Lights)
   {
+    intr I;
+
     light_info li;
       
     DBL att = OneLight->Shadow(Inter->P, &li);
@@ -90,20 +95,23 @@ ivrt::vec3 ivrt::scene::Shade( vec3 &Dir, const envi &Media, intr *Inter, DBL We
       L = li.L,
       V = Dir;
 
-    vec3 N = Inter->N * (-V & Inter->N), R = V - N * 2 * (V & N), color = vec3(0);
+    //vec3 N = Inter->N * (-V & Inter->N);
+    //vec3 R = V - N * 2 * (V & N);
+    //vec3 R = N.Reflect(V);
+    DBL nl = Inter->N & L;
+    if (nl > Threshold)
+      Diffuse = Diffuse + li.Color * Inter->Shp->mtl.Kd * att * nl;
+    DBL rl = R & L;
 
-    DBL nl = mth::Max((Inter->N & L), 0.0);
-    Diffuse = li.Color * /* Intersection->Shp->Mtl.Kd */ 0.7 * nl;
-    DBL rl = mth::Max(R & L, 0.0);
-    Specular = li.Color * 0.5 * pow(rl, 10) * rl;
-    
-    if (IsIntersected(ray(Inter->P + L * Threshold, L)))
+    if (rl > Threshold)
+      Specular = Specular + li.Color * pow(rl, Inter->Shp->mtl.Ph);
+
+    if (Intersection(ray(Inter->P + L * Threshold, L), &I))
       Color += (Diffuse + Specular) * att * 0.10;
     else
       Color += (Diffuse + Specular) * att;
-    Result += color;
   }
-  return mth::Clamp((Ambient + Color) * Weight);
+  return mth::vec3<DBL>::ClampV((Ambient + Color) * Weight);
 } /* End of 'ivrt::scene::Shade' function */
 
 /* Trace ray function.
@@ -136,9 +144,12 @@ ivrt::vec3 ivrt::scene::Trace( ray &R, const envi &Media, DBL Weight, INT RecLev
       //  Intr.P = R(Intr.T);
       color = Shade(R.Dir, Media, &Intr, Weight);
       //color = color * exp(-Intr.T * Media.DecayCoef);
-      Weight *= 0.9;
-      if (Weight > 0.1)
-        color += Trace(R, Media, Weight, ++RecLevel);
+      //vec3 rrd = Intr.N.Reflect(R.Dir);
+
+      //ray NewR(Intr.P - rrd * Intr.T, rrd);
+      //Weight *= Intr.Shp->mtl.Kr;
+      //if (Weight > 0.1)
+      //  color += Trace(NewR, Media, Weight, ++RecLevel);
     }
   }
   return color;

@@ -402,6 +402,31 @@ namespace mth
     {
       return vec3(V[0], 5, V[2]);
     }
+    /* Sum vec3 and number function.
+     * ARGUMENTS: 
+     *   - Summing number: 
+     *       DBL N;
+     * RETURNS: (vec3) result vector.
+     */
+    vec3 Reflect( vec3 &val )  
+    {
+      vec3 Norm = this->Normalizing();
+      return val - Norm * 2 * (val & Norm);
+    }
+    /* Clamp value between two variables function.
+     * ARGUMENTS: 
+     *   - Variable needs to be clamped:
+     *       Type Value;
+     *   - Borders of clamping:
+     *       Type min, max; 
+     * RETURNS: (Type) result value.  
+     */
+    static vec3 ClampV( vec3 Value, vec3 min = vec3(0), vec3 max = vec3(1) )
+    {
+      return vec3(Clamp(Value[0], min[0], max[0]),
+                  Clamp(Value[1], min[1], max[1]),
+                  Clamp(Value[2], min[2], max[2]));
+    } /* End of 'ClampV' function */
 
   }; /* End of 'vec3' class */
 

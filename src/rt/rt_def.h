@@ -56,10 +56,17 @@ namespace ivrt
     vec3 Ka, Kd, Ks; // ambient, diffuse, specular
     DBL Ph;          // Bui Tong Phong coefficient
     DBL Kr, Kt;      // reflected, transmitted
+    surface( VOID ) : Ka(vec3(0.1)), Kd(vec3(0.7)), Ks(vec3(0.7)), Kr(0.9), Kt(0.1), Ph(10)  
+    {
+    }
+    surface( vec3 NKa, vec3 NKd, vec3 NKs, DBL NPh, DBL NKr, DBL NKt ) :
+      Ka(NKa), Kd(NKd), Ks(NKs), Kr(NKr), Kt(NKt), Ph(NPh)
+    {
+    }
   }; /* End of 'surface' class */
 
   /* Shape class */
-  class shape : public surface
+  class shape
   {
   public:
     /* Find intersection function.
@@ -94,6 +101,7 @@ namespace ivrt
     virtual VOID GetNormal( intr *Intr )
     {
     }
+    surface mtl;
   }; /* End of 'shape' class */
 
   /* Environment class */
@@ -105,6 +113,10 @@ namespace ivrt
     envi( DBL NRefractionCoef, DBL NDecayCoef ) : DecayCoef(NDecayCoef), RefractionCoef(NRefractionCoef)
     {
     }
+    envi( VOID ) : DecayCoef(1), RefractionCoef(1)
+    {
+    }
+
   }; /* End of 'envi' class */
 
   /* Scene class */
@@ -113,7 +125,7 @@ namespace ivrt
   private:
     std::vector<shape *> Shapes;
     std::vector<light *> Lights;
-    vec3 AmbientColor, Background = vec3(1, 0, 0);
+    vec3 AmbientColor, Background = vec3(0.9, 0.9, 0.9);
     INT RecLevel = 0, MaxRecLevel = 1;
  
   public:
@@ -121,10 +133,11 @@ namespace ivrt
     ~scene( VOID )
     {
       for (auto p : Shapes)
-      {
         delete p;
-      } 
       Shapes.clear();
+      for (auto l : Lights)
+        delete l;
+      Lights.clear();
     }
 
     /* Find intersection function.

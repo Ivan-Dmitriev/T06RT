@@ -50,21 +50,26 @@ namespace ivrt
      *      light_info *L;
      * RETURNS: (DBL) result value.
      */
-    DBL Shadow( const vec3 &P, light_info *L ) override
+    DBL Shadow( vec3 &P, light_info *L ) override
     {
       vec3 Direction = (LgtPos - P).Normalizing();
-      DBL Dist = LgtPos.Distance(P), att = 1;// att = 1 / (Cq * Dist * Dist + Cl * Dist + Cc);
+      DBL att = 1;// att = 1 / (Cq * Dist * Dist + Cl * Dist + Cc);
+      //DBL Dist = !(P - LgtPos);
+      DBL Dist;// = LgtPos.Distance(P);
 
+      Dist = LgtPos.Distance(P);
+      /*
       if (Dist > R1 && Dist <= R2)
         att -= (Dist - R1) / Cr;
       else if (Dist > R2)
         att = 0;
-
+      */
       L->L = Direction;
       L->Color = LgtColor;
       L->Dist = Dist;
-      return mth::Min<DBL>(att, 1);
-      //return mth::Min(1 / (Cc + Cl * dl + Cq * dl2 * dl2), 1.0)
+
+      //return mth::Min<DBL>(att, 1);
+      return mth::Min(1 / (Cc + Cl * Dist + Cq * Dist * Dist), 1.0);
     } /* End of 'Shadow' function */
 
   }; /* End of 'point' class */

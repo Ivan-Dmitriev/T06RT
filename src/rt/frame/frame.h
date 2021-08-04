@@ -19,6 +19,7 @@
 #define __frame_h_
 
 #include <fstream>
+#include <filesystem>
 
 #pragma pack(push, 1)
 #include <TGAHEAD.H>
@@ -180,7 +181,10 @@ namespace ivrt
       std::string FileName; 
       SYSTEMTIME st;
       GetLocalTime(&st);
-      FileName = "bin/shots/ID3_RES_RT_" +
+      std::string path("bin\\shots"); 
+      std::filesystem::create_directories(path);
+
+      FileName = "ID3_RES_RT_" +
         std::to_string(st.wYear) + "_" +
         std::to_string(st.wMonth) + "_" +
         std::to_string(st.wDay) + "_" +
@@ -189,7 +193,7 @@ namespace ivrt
         std::to_string(st.wSecond) + "_" +
         std::to_string(st.wMilliseconds) + ".tga";
 
-      std::fstream f(FileName, std::fstream::out | std::fstream::binary);
+      std::fstream f(path + "\\" + FileName, std::fstream::out | std::fstream::binary);
       tgaFILEHEADER fh;
       tgaFILEFOOTER ff;
       tgaEXTHEADER eh;

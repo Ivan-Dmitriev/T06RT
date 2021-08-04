@@ -61,9 +61,9 @@ namespace ivrt
           for (INT x = 0; x < RT->Frame.Width; x++)
           {
             ray R = RT->Cam.FrameRay(x + 0.5, y + 0.5);
-            RT->Scene.Trace(R, Media, 1.0, 0);
+            color = RT->Scene.Trace(R, Media, 1.0, 0);
 
-            //Frame.PutPixel(x, y, frame::ToRGB(mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10), mth::Lerp(0.0f, 1.0f, I.T / 10)));
+            RT->Frame.PutPixel(x, y, frame::ToRGB(color));
           }
       };
       for (INT i = 0; i < 11; i++)
@@ -122,7 +122,7 @@ namespace ivrt
       //    Frame.PutPixel(x, y, RGB(120 * sin(x), 10 * cos(y), 10));
       //FullScreenSaveRect.left = 0;
       //FullScreenSaveRect.right = W;
-      //FullScreenSaveRect.top = H;
+      //  FullScreenSaveRect.top = H;
       //FullScreenSaveRect.left = 0;
 
     } /* End of 'Resize' function */
@@ -183,8 +183,10 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
                  new ivrt::sphere(ivrt::vec3(0, 1, 3), 1) << 
                  new ivrt::sphere(ivrt::vec3(3, 1, 4), 1) << 
                  new ivrt::plane(ivrt::vec3(0, 1, 0), 0) << 
-                 new ivrt::point(ivrt::vec3(3, 3, 3), ivrt::vec3(0, 1, 0), 3, 6); 
-                 /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5)); */
+                 new ivrt::point(ivrt::vec3(4, 3, 4), ivrt::vec3(0, 0, 0.9), 10, 20) <<  
+                 new ivrt::point(ivrt::vec3(1, 6, 1), ivrt::vec3(0.9, 0, 0), 10, 20); 
+
+  /*new ivrt::box(ivrt::vec3(0, 1, 0), ivrt::vec3(5, 3, 5)); */
 
   //MyNew.Scene << new ivrt::plane(ivrt::vec3(0, 0, 0), 0);
   //std::cout << p; 

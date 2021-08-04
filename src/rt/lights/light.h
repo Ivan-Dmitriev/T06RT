@@ -49,7 +49,7 @@ namespace ivrt
   public:
     DBL Cc, Cl, Cq;
  
-    light( VOID ) : Cc(0.0), Cl(1.0), Cq(0.0)
+    light( VOID ) : Cc(1.0), Cl(0.01), Cq(0.01)
     {
     } /* End of 'light' function */
 
@@ -61,7 +61,7 @@ namespace ivrt
      *      light_info *L;
      * RETURNS: (DBL) result value.
      */
-    virtual DBL Shadow( const vec3 &P, light_info *L )
+    virtual DBL Shadow( vec3 &P, light_info *L )
     {
       return 0.0;
     } /* End of 'Shadow' function */
