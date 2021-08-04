@@ -99,6 +99,9 @@
     <ClInclude Include="src\rt\lights\light.h">
       <Filter>Source Files\Source\Ray Tracing\Light system</Filter>
     </ClInclude>
+    <ClInclude Include="src\timer.h">
+      <Filter>Source Files\Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

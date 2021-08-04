@@ -85,7 +85,7 @@ namespace mth
       mth::ray<FLT> Ray;
       /* Default constructor */
       camera( VOID ) :
-        Loc(8, 4, 4), Dir(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0), At(0, 0, 0),
+        Loc(4, 4, 4), Dir(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0), At(0, 0, 0),
         ProjDist(0.1), FarClip(700), Size(0.1),
         FrameW(30), FrameH(30), Wp(0.1), Hp(0.1)
       {

@@ -28,9 +28,11 @@ namespace ivrt
   private:
     vec3 Center;
     DBL Radius;
+
   public:
-    sphere( vec3 C, DBL R ) : Center(C), Radius(R) 
+    sphere( vec3 C, DBL R, surface NS ) : Center(C), Radius(R)
     {
+      this->mtl = NS;
     }
     /* Find intersection on sphere function.
       * ARGUMENTS: 

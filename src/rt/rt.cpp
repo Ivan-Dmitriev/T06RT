@@ -94,7 +94,7 @@ ivrt::vec3 ivrt::scene::Shade( vec3 &Dir, const envi &Media, intr *Inter, DBL We
     vec3 
       L = li.L,
       V = Dir;
-
+    Ambient = Inter->Shp->mtl.Ka;
     //vec3 N = Inter->N * (-V & Inter->N);
     //vec3 R = V - N * 2 * (V & N);
     //vec3 R = N.Reflect(V);
@@ -141,7 +141,17 @@ ivrt::vec3 ivrt::scene::Trace( ray &R, const envi &Media, DBL Weight, INT RecLev
       //  Intr.P = R(Intr.T);
       color = Shade(R.Dir, Media, &Intr, Weight);
       DBL fogcoef = exp(-Intr.T * Media.DecayCoef);
+      DBL interpfog = 0;
+      
+      if (Intr.T < FogStart)
+        interpfog = 1;
+      else if (Intr.T > FogEnd)
+        interpfog = 0;
+      else 
+        interpfog = (Intr.T - FogStart) / (FogEnd - FogStart);
+
       vec3 reflraydir = Intr.N.Reflect(R.Dir);
+      color = color * interpfog + fogcoef * (1 - interpfog);
 
       //DBL wt = Weight * Intr.Shp->mtl.Kr;
       //if (wt > Threshold)

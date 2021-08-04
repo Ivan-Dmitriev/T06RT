@@ -25,8 +25,8 @@
 /* Project namespace */
 namespace ivrt
 {
-  const DBL FogStart = 0.75;
-  const DBL FogEnd = 2;
+  const DBL FogStart = 10;
+  const DBL FogEnd = 50;
 
   const static DBL Threshold = 0.0001;
   class shape;
@@ -56,10 +56,11 @@ namespace ivrt
   class surface
   {
   public:
-    vec3 Ka, Kd, Ks; // ambient, diffuse, specular
-    DBL Ph;          // Bui Tong Phong coefficient
-    DBL Kr, Kt;      // reflected, transmitted
-    surface( VOID ) : Ka(vec3(0.23125)), Kd(vec3(0.2775)), Ks(vec3(0.773911)), Kr(0.4), Kt(0.1), Ph(89.6)  
+    std::string Name; // material name
+    vec3 Ka, Kd, Ks;  // ambient, diffuse, specular
+    DBL Ph;           // Bui Tong Phong coefficient
+    DBL Kr, Kt;       // reflected, transmitted
+    surface( VOID ) : Ka(vec3(0.23125)), Kd(vec3(0.2775)), Ks(vec3(0.773911)), Kr(0.4), Kt(0.1), Ph(89.6)
     {
     }
     surface( vec3 NKa, vec3 NKd, vec3 NKs, DBL NPh, DBL NKr, DBL NKt ) :
@@ -72,6 +73,8 @@ namespace ivrt
   class shape
   {
   public:
+    surface mtl;
+
     /* Find intersection function.
      * ARGUMENTS: 
      *   - ray:
@@ -104,7 +107,6 @@ namespace ivrt
     virtual VOID GetNormal( intr *Intr )
     {
     }
-    surface mtl;
   }; /* End of 'shape' class */
 
   /* Environment class */

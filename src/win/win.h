@@ -133,6 +133,7 @@ namespace ivrt
     VOID OnClose( VOID );
     VOID OnDestroy( VOID );
     VOID OnActivate( UINT Reason, HWND hWndActDeact, BOOL IsMinimized );
+    VOID OnKey( UINT Key, BOOL IsPress, INT RepeatCount, UINT ShiftKeysFlags );
   }; /* End of 'win' class */
 } /* end of 'ivrt' namespace */
 

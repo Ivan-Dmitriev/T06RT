@@ -18,6 +18,7 @@
 #include <commondf.h>
 
 #include "win.h"
+#include "../rt/rt_def.h"
 
 #define InitTimer 30
 #define RefreshTimer 47
@@ -46,13 +47,13 @@ namespace ivrt
   VOID win::OnDestroy( VOID )
   {
     if (IsInit)
-      {
-        Close();
-        KillTimer(hWnd, RefreshTimer);
-      }
-      else
-        KillTimer(hWnd, InitTimer);
-  } /* End of 'win::OnDestroy' function */
+    {
+      Close();
+      KillTimer(hWnd, RefreshTimer);
+    }
+    else
+      KillTimer(hWnd, InitTimer);
+} /* End of 'win::OnDestroy' function */
  
   /* WM_SIZE window message handle function.
    * ARGUMENTS:
@@ -174,12 +175,21 @@ namespace ivrt
     */
     //PostQuitMessage(30);
   } /* End of 'win::OnPaint' function */ 
+  
+  /* WM_GetMinMaxInfo window message handle function.
+   * ARGUMENTS:
+   *   - window device context:
+   *       HDC hDC;
+   *   - paint message structure pointer:
+   *       PAINTSTRUCT *PS;
+   * RETURNS: None.
+   */
   VOID win::OnGetMinMaxInfo( MINMAXINFO *MinMax )
   {
     MinMax->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK) +
     GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER) * 2;
   } /* End of 'win::OnGetMinMaxInfo' function */ 
-}
+} /* end of 'ivrt' namespace */
 
 /* END OF 'winmsg.cpp' FILE */
 
