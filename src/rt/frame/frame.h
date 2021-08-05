@@ -181,7 +181,7 @@ namespace ivrt
       std::string FileName; 
       SYSTEMTIME st;
       GetLocalTime(&st);
-      std::string path("bin\\shots"); 
+      std::string path("bin\\shots");
       std::filesystem::create_directories(path);
 
       FileName = "ID3_RES_RT_" +

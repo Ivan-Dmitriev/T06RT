@@ -53,6 +53,11 @@ namespace ivrt
         return FALSE;
       Intr->P = R(Intr->T);
 
+      for (INT i = 0; i < 5; i++)
+        Intr->add[i] = 0;
+
+      Intr->add[4] = 1;
+
       Intr->Shp = this;
       return TRUE;
     } /* End of 'Intersection' function */
@@ -84,7 +89,27 @@ namespace ivrt
         return FALSE;
       return TRUE;
     } /* End of 'IsIntersected' function */
-
+    /* Find all intersections function.
+     * ARGUMENTS:
+     *   - ray to find intersections:
+     *       const ray &R;
+     *   - intersection list (for output):
+     *       intr_list &IList;
+     * RETURNS:
+     *   (INT) number of intersections.
+     */
+    INT AllIntersect( const ray &R, intr_list &IList )
+    {
+      DBL Treshold = 1e-4;
+      DBL divider = Norm & R.Dir;
+      if (COM_ABS(divider) <= Treshold)
+        return 0;
+      DBL T = (D - (Norm & R.Org)) / divider;
+      if (T < Treshold)
+        return 0;
+      IList.I_list.push_back(intr(this, (D - (Norm & R.Org)) / divider));
+      return 1;
+    } /* End of 'AllIntersect' function */
   }; /* End of 'plane' class */
 } /* end of 'ivrt' namespace */
 

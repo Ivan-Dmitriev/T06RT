@@ -106,10 +106,16 @@ ivrt::vec3 ivrt::scene::Shade( vec3 &Dir, const envi &Media, intr *Inter, DBL We
     if (rl > Threshold)
       Specular = Specular + li.Color * pow(rl, Inter->Shp->mtl.Ph);
 
-    if (IsIntersected(ray(Inter->P + L * Threshold, L)))
+    if (Intersection(ray(Inter->P + L * Threshold, L), &I) && (I.T + Threshold > li.Dist))
       Color += (Diffuse + Specular) * att * 0.10;
     else
       Color += (Diffuse + Specular) * att;
+    /*
+    if (!Inter->add[4])
+      Color = Inter->Shp->mtl.Ka + Inter->Shp->mtl.Kd * Diffuse + Inter->Shp->mtl.Ks * Specular;
+    else
+      Color  = GetKa(Inter->P + R * Threshold) + Inter->Shp->mtl.Kd * Diffuse + Inter->Shp->mtl.Ks * Specular;
+    */
   }
   return mth::vec3<DBL>::ClampV((Ambient + Color) * Weight);
 } /* End of 'ivrt::scene::Shade' function */
@@ -140,7 +146,8 @@ ivrt::vec3 ivrt::scene::Trace( ray &R, const envi &Media, DBL Weight, INT RecLev
       //if (!Intr.IsPos)
       //  Intr.P = R(Intr.T);
       color = Shade(R.Dir, Media, &Intr, Weight);
-      DBL fogcoef = exp(-Intr.T * Media.DecayCoef);
+      /*
+      DBL fogcoef = exp(-0.007 * Intr.T);
       DBL interpfog = 0;
       
       if (Intr.T < FogStart)
@@ -150,18 +157,31 @@ ivrt::vec3 ivrt::scene::Trace( ray &R, const envi &Media, DBL Weight, INT RecLev
       else 
         interpfog = (Intr.T - FogStart) / (FogEnd - FogStart);
 
+      color = color * fogcoef + FogColor * (1 - fogcoef);
+      */
       vec3 reflraydir = Intr.N.Reflect(R.Dir);
-      color = color * interpfog + fogcoef * (1 - interpfog);
 
       //DBL wt = Weight * Intr.Shp->mtl.Kr;
       //if (wt > Threshold)
         //color += Trace(ray(Intr.Shd.P + R.oooo
-        // Dir * Threshold, R.Dir), Media, wr) * Shd.Mtl.Krefl;
+        // Dir * Threshold, R.Dir), Media, wr) * Shd.mtl.Krefl;
       ray NewR(Intr.P + reflraydir * Threshold, reflraydir);
 
       Weight *= Intr.Shp->mtl.Kr;
       if (Weight > 0.1)
         color += Trace(NewR, Media, Weight, ++RecLevel);
+      
+      //DBL rc = Weight * Intr.Shp->mtl.Kt;
+      
+      //if (rc > Threshold)
+      //{
+      //  vec3 v = R.Dir;
+
+      //  DBL cosa = -v & Intr.N;
+      //  DBL ETAratio = /* Intr.Shp-> */Media.RefractionCoef / Glass.RefractionCoef;
+      //  
+      //  //vec3 T = ETAratio * (v - Intr.N);
+      //}
     }
   }
   return color;

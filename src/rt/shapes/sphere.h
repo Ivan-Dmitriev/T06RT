@@ -27,10 +27,10 @@ namespace ivrt
   {
   private:
     vec3 Center;
-    DBL Radius;
+    DBL Radius, Radius2;
 
   public:
-    sphere( vec3 C, DBL R, surface NS ) : Center(C), Radius(R)
+    sphere( vec3 C, DBL R, surface NS ) : Center(C), Radius(R), Radius2(R * R)
     {
       this->mtl = NS;
     }
@@ -64,6 +64,9 @@ namespace ivrt
       }
       if (OK < Threshold || h2 < Threshold)
         return FALSE;
+      for (INT i = 0; i < 5; i++)
+        Intr->add[i] = 0;
+
       Intr->T = OK - sqrt(h2);
       Intr->P = R(Intr->T);
       Intr->IsPos = TRUE;
@@ -106,6 +109,19 @@ namespace ivrt
         return FALSE;
       return TRUE;
     } /* End of 'IsIntersected' function */
+
+    /* Check if point is inside of the shape.
+     * ARGUMENTS:
+     *   - Reference ray to intersect:
+     *         ray &R;
+     *   - Reference to stock of intersections:
+     *         intr_list &IList;
+     * RETURNS: (BOOL) TRUE if success, FALSE otherwise.
+     */
+    BOOL IsInside( const vec3 &P ) override
+    {
+      return (P.Distance2(Center) < Radius2);
+    } /* End of 'IsInside' function */
   }; /* End of 'sphere' class */
 } /* end of 'ivrt' namespace */
 

@@ -19,6 +19,7 @@
 #include <ctime>
 #include <thread>
 #include <map>
+#include <vector>
 
 #include "def.h"
 #include "win/win.h"
@@ -106,8 +107,8 @@ namespace ivrt
 
       for (INT i = 0; i < 11; i++)
         Th[i].join();
-      InvalidateRect(hWnd, nullptr, TRUE);
 
+      InvalidateRect(hWnd, nullptr, TRUE);
     } /* End of 'Render' function */
 
     /* Initialization function.
@@ -116,8 +117,9 @@ namespace ivrt
      */
     VOID Init( VOID ) override
     {
-      Cam.Resize(500, 300);
-      Cam.Rotate(vec3(0, 1, 0), 30);
+      Frame.Resize(3840, 2160);
+      Cam.Resize(3840, 2160);
+      //Cam.Rotate(vec3(0, 1, 0), 30);
     } /* End of 'Init' function */
  
     /* Paint function.
@@ -148,8 +150,8 @@ namespace ivrt
         Frame.PutPixel(x, H, RGB(0, 0, 255));
       for (INT y = 0; y < H; y++)
         Frame.PutPixel(W, y, RGB(0, 0, 255));
-      Cam.Resize(W, H);
-      Frame.Resize(W, H);
+      //Cam.Resize(W, H);
+      //Frame.Resize(W, H);
       Render();
       Frame.SaveTGA();
       //for (INT y = 0; y < H; y++)
@@ -168,7 +170,9 @@ namespace ivrt
     VOID Timer( VOID ) override
     {
       Render();
-      Cam.Rotate(vec3(0, 1, 0), 1);
+      Frame.SaveTGA();
+
+      Cam.Rotate(vec3(0, 1, 0), 3);
     } /* End of 'Timer' function */
     /* Erase function.
      * ARGUMENTS: 
@@ -189,6 +193,7 @@ namespace ivrt
     VOID Idle( VOID ) final
     {
       Render();
+      Frame.SaveTGA();
       //Cam.Rotate(vec3(0, 1, 0), 10);
     } /* End of 'Idle' function */
 
@@ -215,6 +220,77 @@ namespace ivrt
   } /* End of 'win::OnKey' function */
 
 } /* end of 'ivrt' namespace */
+
+/* Load primitive from '*.OBJ' file function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       dg5PRIM *Pr;
+ *   - primitive type:
+ *       INT Type;
+ *   - '*.OBJ' file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL PrimitiveLoad( std::vector<ivrt::vec3> &V, std::vector<INT> &I, const CHAR *FileName )
+{
+  INT
+    noofv = 0,
+    noofi = 0;
+  FILE *F;
+  CHAR Buf[1000];
+
+  /* Open file */
+  if ((F = fopen(FileName, "r")) == NULL)
+    return FALSE;
+
+  /* Count vertex and index quantities */
+  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
+  {
+    if (Buf[0] == 'v' && Buf[1] == ' ')
+      noofv++;
+    else if (Buf[0] == 'f' && Buf[1] == ' ')
+      noofi++;
+  }
+  I.resize(noofi * 3);
+  V.resize(noofv);
+
+  //Ind = (INT *)(V + noofv);
+
+  /* Read vertices and facets data */
+  rewind(F);
+  noofv = noofi = 0;
+  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
+  {
+    if (Buf[0] == 'v' && Buf[1] == ' ')
+    {
+      FLT x, y, z;
+
+      sscanf(Buf + 2, "%f%f%f", &x, &y, &z);
+      V[noofv++] = ivrt::vec3(x, y, z);
+    }
+    else if (Buf[0] == 'f' && Buf[1] == ' ')
+    {
+      INT n1, n2, n3;
+
+      /* Read one of possible facet references */
+      sscanf(Buf + 2, "%d/%*d/%*d %d/%*d/%*d %d/%*d/%*d", &n1, &n2, &n3) == 3 ||
+      sscanf(Buf + 2, "%d//%*d %d//%*d %d//%*d", &n1, &n2, &n3) == 3 ||
+      sscanf(Buf + 2, "%d/%*d %d/%*d %d/%*d", &n1, &n2, &n3) == 3 ||
+      sscanf(Buf + 2, "%d %d %d", &n1, &n2, &n3);
+      n1--;
+      n2--;
+      n3--;
+      I[noofi++] = n1;
+      I[noofi++] = n2;
+      I[noofi++] = n3;
+    }
+  }
+
+  fclose(F);
+
+  return TRUE;
+} /* End of 'PrimitiveLoad' function */
 
  /* The main program function.
   * ARGUMENTS:
@@ -245,9 +321,17 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR *CmdLine,
     MyNew.Scene << new ivrt::sphere(ivrt::vec3(1 * (i % 4), 2 * Radius * (i / 4), 0), Radius, 
                                      MtlTable[MatLib[i].Name]);
   }
-  MyNew.Scene << new ivrt::point(ivrt::vec3(4, 10, -4), ivrt::vec3(1, 1, 1), 10, 20) <<
+  MyNew.Scene << new ivrt::point(ivrt::vec3(5, 10, 5), ivrt::vec3(1, 1, 1), 10, 20) <<
                  new ivrt::plane(ivrt::vec3(0, 1, 0), 0) <<
-                 new ivrt::point(ivrt::vec3(-4, 10, -4), ivrt::vec3(1, 1, 1), 10, 20);
+                 new ivrt::point(ivrt::vec3(-5, 10, -5), ivrt::vec3(1, 1, 1), 10, 20);
+  std::vector<ivrt::vec3> Res_V;
+  std::vector<INT> Res_I;
+  //PrimitiveLoad(Res_V, Res_I, "bin/models/cow.object");
+
+  INT V;
+  //for (INT i = 0; i < Res_I.size() - 3; i += 3)
+  //  MyNew.Scene << new ivrt::triangle(Res_V[Res_I[i]], Res_V[Res_I[i + 1]], Res_V[Res_I[i + 2]]);
+
   //ivrt::vec3 p(120, 13, 4);
   //FLT x = p.Distance(p);
   /*

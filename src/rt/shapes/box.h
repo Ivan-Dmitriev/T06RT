@@ -209,6 +209,9 @@ namespace ivrt
       Intr->T = tnear;
       if (NormNum != -1)
         Intr->N = Normals[NormNum];
+      for (INT i = 0; i < 5; i++)
+        Intr->add[i] = 0;
+
       return TRUE;
     } /* End of 'Intersection' function */
 

@@ -268,10 +268,21 @@ namespace mth
        *     - const vec3 &V;
        * RETURNS: (DBL) result value.
        */
-      DBL Distance( const vec3 &V )
+      Type Distance( const vec3 &V ) const
       {
         return sqrt((X - V.X) * (X - V.X) + (Y - V.Y) * (Y - V.Y) + (Z - V.Z) * (Z - V.Z));
       } /* End of 'Distance' function */
+
+      /* Find squared distance between two vectors function.
+       * ARGUMENTS: 
+       *   Link on vector:
+       *     - const vec3 &V;
+       * RETURNS: (DBL) result value.
+       */
+      Type Distance2( const vec3 &V ) const
+      {
+        return (X - V.X) * (X - V.X) + (Y - V.Y) * (Y - V.Y) + (Z - V.Z) * (Z - V.Z);
+      } /* End of 'Distance2' function */
 
       /* Set zero vector function.
        * ARGUMENTS: None.
